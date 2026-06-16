@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Data caches & downloads (regenerable from public APIs)
+data/
+*.parquet
+*.csv
+*.db
+*.sqlite*
+*.log
+
+# Secrets / env
+.env
+.env.*
+
+# Editor
+.vscode/
+.idea/
