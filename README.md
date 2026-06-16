@@ -15,6 +15,9 @@ hypothesis runs through the same **cost wall**:
 A new idea becomes a ~10-line signal function and one command; the verdict lands in an
 append-only ledger so dead ends are never re-explored.
 
+📄 **See [FINDINGS.md](FINDINGS.md)** for two worked examples — including a "0.64 AUC edge"
+that was really noise, and the look-ahead bug that turned a fake 474% CAGR into the truth.
+
 ---
 
 ## Why it's different (the methodology is the product)
