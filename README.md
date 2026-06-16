@@ -1,3 +1,5 @@
+<p align="center"><img src="logo_full.png" alt="costwall" width="620"></p>
+
 # costwall — honest backtesting & quant-research harness
 
 **A research framework that tells you whether a trading signal actually has an edge —
