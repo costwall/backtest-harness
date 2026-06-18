@@ -5,7 +5,7 @@ research/signals/ — реестр сигналов-кандидатов.
 строго на прошлом (rolling/expanding, никакого .shift(-k) внутрь). Знак не важен:
 costwall ориентирует его по train. Возвращай NaN там, где данных не хватает.
 """
-from research.signals import deriv, cot
+from research.signals import deriv, cot, price
 
 # имя -> функция. CLI выбирает по имени.
 REGISTRY = {
@@ -17,4 +17,6 @@ REGISTRY = {
     "cot_z": cot.cot_z,
     "cot_index": cot.cot_index,
     "cot_chg": cot.cot_chg,
+    "mom": price.mom,           # ценовой моментум/тренд (только OHLC)
+    "zscore": price.zscore,     # ценовой mean-reversion (только OHLC)
 }

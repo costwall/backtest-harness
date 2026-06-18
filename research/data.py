@@ -52,6 +52,22 @@ _CANONICAL = [
 ]
 
 
+def resample_ohlc(df: pd.DataFrame, rule: str) -> pd.DataFrame:
+    """Агрегировать OHLC(V) в старший ТФ (rule в стиле pandas: '1h','4h','1d').
+
+    open=first, high=max, low=min, close=last, volume=sum. dropna ОБЯЗАТЕЛЕН: форекс
+    не 24/7 → выходные дают пустые бины (фантомные бары иначе). Прочие колонки
+    (deriv-flow) не агрегируются осмысленно — отбрасываются (ценовые сигналы их не
+    используют). Возвращает чистый OHLCV на старшем ТФ.
+    """
+    agg = {"open": "first", "high": "max", "low": "min", "close": "last"}
+    if "volume" in df.columns:
+        agg["volume"] = "sum"
+    cols = [c for c in agg if c in df.columns]
+    out = df[cols].resample(rule).agg({c: agg[c] for c in cols})
+    return out.dropna(subset=["open", "high", "low", "close"])
+
+
 def _finalize(df: pd.DataFrame) -> pd.DataFrame:
     """Привести к каноничному виду: только известные колонки, sorted UTC index, dedup."""
     keep = [c for c in _CANONICAL if c in df.columns]
@@ -117,6 +133,12 @@ def load_forex_ohlc(symbol: str) -> pd.DataFrame:
         df.index = pd.to_datetime(df[tcol], utc=True)
     df.index.name = "ts"
     df.columns = [c.lower() for c in df.columns]
+    # Yahoo-артефакт: первая строка = тикер ('EURUSD=X', Datetime=NaN→NaT). Дроп строк
+    # без валидного времени и приведение OHLCV к числам (иначе строка ломает astype).
+    df = df[df.index.notna()]
+    for c in ("open", "high", "low", "close", "volume"):
+        if c in df.columns:
+            df[c] = pd.to_numeric(df[c], errors="coerce")
     return _finalize(df)
 
 
